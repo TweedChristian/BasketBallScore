@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/root"
     android:gravity="center">
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +21,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
-            <com.google.android.material.textview.MaterialTextView
+            <EditText
+                android:id="@+id/teamOneName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -81,7 +83,8 @@
             android:gravity="center"
             android:orientation="vertical"
             >
-            <com.google.android.material.textview.MaterialTextView
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/teamTwoName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

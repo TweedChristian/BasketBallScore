@@ -1,10 +1,17 @@
 package com.tweedchristian.android.basketballscore
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
@@ -29,6 +36,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resetButton: Button
     private lateinit var teamOnePointsTextView: TextView
     private lateinit var teamTwoPointsTextView: TextView
+
+    private lateinit var teamOneTitle: EditText
+    private lateinit var teamTwoTitle: EditText
+    private lateinit var linearLayout: LinearLayout
 
     private val basketballViewModel: BasketballViewModel by lazy {
         ViewModelProvider(this).get(BasketballViewModel::class.java)
@@ -57,6 +68,37 @@ class MainActivity : AppCompatActivity() {
         savedInstanceState.putInt(TEAM_TWO_INDEX, basketballViewModel.teamTwoCurrentPoints)
     }
 
+    override fun onStart() {
+        super.onStart()
+        val teamOneTitleWatcher = object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d(TAG, "pp")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        }
+        val teamTwoTitleWatcher = object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                Log.d(TAG, "pp2")
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+        }
+
+        teamOneTitle.addTextChangedListener(teamOneTitleWatcher)
+        teamTwoTitle.addTextChangedListener(teamTwoTitleWatcher)
+    }
+
     /**
      * A function to update the displayed text to what is stored in the view model
      */
@@ -76,15 +118,22 @@ class MainActivity : AppCompatActivity() {
         teamOne2ShotButton = findViewById(R.id.teamOne2Points)
         teamOneFreeThrowButton = findViewById(R.id.teamOneFreeThrow)
         teamOnePointsTextView = findViewById(R.id.teamOnePoints)
+        teamOneTitle = findViewById(R.id.teamOneName)
+        teamOneTitle.clearFocus()
 
         //Team Two Init
         teamTwo3ShotButton = findViewById(R.id.teamTwo3Points)
         teamTwo2ShotButton = findViewById(R.id.teamTwo2Points)
         teamTwoFreeThrowButton = findViewById(R.id.teamTwoFreeThrow)
         teamTwoPointsTextView = findViewById(R.id.teamTwoPoints)
+        teamTwoTitle = findViewById(R.id.teamTwoName)
+        teamTwoTitle.clearFocus()
 
         //Reset Button
         resetButton = findViewById(R.id.resetButton)
+
+        //Root Element
+        linearLayout = findViewById(R.id.root)
 
         //Setting Callbacks
 
@@ -109,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         teamTwo2ShotButton.setOnClickListener {
-            basketballViewModel.updatePoints(false,2)
+            basketballViewModel.updatePoints(false, 2)
             updatePoints()
         }
 
@@ -122,5 +171,22 @@ class MainActivity : AppCompatActivity() {
             basketballViewModel.resetPoints()
             updatePoints()
         }
+
+        //Hide Keyboard and Clear Focus on Click-away
+        linearLayout.setOnClickListener {
+            val imm: InputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
+            if(teamOneTitle.hasFocus()) {
+                imm.hideSoftInputFromWindow(teamOneTitle.windowToken, 0)
+            }
+
+            if(teamTwoTitle.hasFocus()) {
+                imm.hideSoftInputFromWindow(teamTwoTitle.windowToken, 0)
+            }
+
+            teamOneTitle.clearFocus()
+            teamTwoTitle.clearFocus()
+        }
     }
 }
+

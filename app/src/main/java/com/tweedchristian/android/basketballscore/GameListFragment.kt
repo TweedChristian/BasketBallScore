@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,6 +50,7 @@ class GameListFragment : Fragment() {
         val teamOneNameTextView: TextView = itemView.findViewById(R.id.listTeamOneName)
         val teamTwoNameTextView: TextView = itemView.findViewById(R.id.listTeamTwoName)
         val teamScoreTextView: TextView = itemView.findViewById(R.id.teamScore)
+        val winnerImageView: ImageView = itemView.findViewById(R.id.imageView)
 
         fun bind(game: BasketBallGame) {
             this.game = game
@@ -56,10 +58,15 @@ class GameListFragment : Fragment() {
             teamOneNameTextView.text = game.getTeamOne.name
             teamTwoNameTextView.text = game.getTeamTwo.name
             teamScoreTextView.text = loadGameScore(game.getTeamOne.points, game.getTeamTwo.points)
+            when {
+                game.getTeamOne.points > game.getTeamTwo.points -> winnerImageView.setImageResource(R.drawable.keet)
+                game.getTeamOne.points < game.getTeamTwo.points -> winnerImageView.setImageResource(R.drawable.kobaka)
+                else -> winnerImageView.setImageResource(R.drawable.minion)
+            }
         }
 
         private fun loadGameScore(teamOneScore: Int, teamTwoScore: Int): String {
-            return "$teamOneScore:$teamTwoScore"
+            return "$teamOneScore : $teamTwoScore"
         }
     }
 

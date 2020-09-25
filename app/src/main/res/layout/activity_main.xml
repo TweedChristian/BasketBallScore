@@ -18,6 +18,7 @@
         android:layout_marginRight="16dp"
         android:divider="?android:dividerHorizontal"
         android:showDividers="middle"
+        android:baselineAligned="false"
         >
         <LinearLayout
             android:layout_width="0dp"
@@ -25,13 +26,14 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/teamOneName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="16dp"
-                android:text="@string/teamA" />
+                android:text="@string/teamA"
+                android:inputType="text" />
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/teamOnePoints"
                 android:layout_width="match_parent"
@@ -93,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="16dp"
+                android:inputType="text"
                 android:text="@string/teamB" />
 
             <com.google.android.material.textview.MaterialTextView

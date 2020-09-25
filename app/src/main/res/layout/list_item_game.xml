@@ -1,48 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:orientation="vertical"
     android:padding="8dp">
+
+
     <TextView
         android:id="@+id/gameDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="thu 5:9a, 3250125-9 aijjioijfnma"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <TextView
-            android:id="@+id/listTeamOneName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="TeamA" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="12dp"
-            android:text="@string/vs"
-             />
-        <TextView
-            android:id="@+id/listTeamTwoName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="TeamB" />
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            >
-            <TextView
-                android:id="@+id/teamScore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="40:50"
-                />
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_margin="12dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Wednesday, 5 February 2020 10:08:33.933" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_margin="12dp"
+        android:contentDescription="@string/teamImageDescription"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/gameDate"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/keet" />
+
+    <TextView
+        android:id="@+id/listTeamOneName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:maxLength="20"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameDate"
+        tools:text="TeamqerhgruhA" />
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:maxLength="20"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/listTeamOneName"
+        app:layout_constraintTop_toBottomOf="@+id/gameDate"
+        app:layout_constraintVertical_bias="0.0"
+        android:text="@string/vs"
+        tools:text="VS." />
+
+    <TextView
+        android:id="@+id/listTeamTwoName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:maxLength="20"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listTeamOneName"
+        tools:text="The Super Bandits" />
+
+    <TextView
+        android:id="@+id/teamScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_marginEnd="115dp"
+        android:maxLength="7"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/listTeamOneName"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        tools:text="40:50" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

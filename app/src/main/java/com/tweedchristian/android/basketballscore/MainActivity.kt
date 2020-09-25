@@ -16,8 +16,6 @@ private const val TAG = "MainActivity"
 private const val TEAM_ONE_INDEX = "teamOne"
 private const val TEAM_TWO_INDEX = "teamTwo"
 
-//TODO: Fragment
-
 //TODO: Recycler View Stuff
 class MainActivity : AppCompatActivity() {
 
@@ -45,13 +43,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         teamButtonInit()
         val teamOneInitialPoints = savedInstanceState?.getInt(TEAM_ONE_INDEX, 0) ?: 0
         val teamTwoInitialPoints = savedInstanceState?.getInt(TEAM_TWO_INDEX, 0) ?: 0
         basketballViewModel.setPointsFromSavedState(teamOneInitialPoints, teamTwoInitialPoints)
         updatePoints()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.titleFragmentContainer)
+        if(currentFragment == null) {
+//            val fragment = TitleFragment()
+            val fragment = GameListFragment.newInstance()
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.titleFragmentContainer, fragment)
+                .commit()
+        }
     }
+
+
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -60,12 +68,12 @@ class MainActivity : AppCompatActivity() {
         savedInstanceState.putInt(TEAM_TWO_INDEX, basketballViewModel.teamTwoCurrentPoints)
     }
 
+    /** For Activity to Activity*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d(TAG, resultCode.toString())
         Log.d(TAG, Activity.RESULT_OK.toString())
         if(resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Passed Check")
             Toast.makeText(this, R.string.gameResultsString, Toast.LENGTH_SHORT).show()
         }
     }
@@ -172,7 +180,7 @@ class MainActivity : AppCompatActivity() {
             basketballViewModel.resetPoints()
             updatePoints()
         }
-
+        /** For Activity to Activity*/
         saveButton.setOnClickListener{
             val intent = GameResults.newIntent(this@MainActivity, basketballViewModel.basketBallGame)
             startActivityForResult(intent, 0)

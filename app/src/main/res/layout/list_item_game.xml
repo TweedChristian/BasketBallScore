@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+    <TextView
+        android:id="@+id/gameDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="thu 5:9a, 3250125-9 aijjioijfnma"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:id="@+id/listTeamOneName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="TeamA" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:text="@string/vs"
+             />
+        <TextView
+            android:id="@+id/listTeamTwoName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="TeamB" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            >
+            <TextView
+                android:id="@+id/teamScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="40:50"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

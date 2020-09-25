@@ -1,14 +1,16 @@
 <resources>
-<string name="app_name">BasketBallScore</string>
-<string name="teamA">Team A</string>
-<string name="teamB">Team B</string>
-<string name="points3">+3 Points</string>
-<string name="points2">+2 Points</string>
-<string name="freeThrow">Free Throw</string>
-<string name="pageTitle">BasketBall Score</string>
-<string name="reset">Reset</string>
+    <string name="app_name">BasketBallScore</string>
+    <string name="teamA">Team A</string>
+    <string name="teamB">Team B</string>
+    <string name="points3">+3 Points</string>
+    <string name="points2">+2 Points</string>
+    <string name="freeThrow">Free Throw</string>
+    <string name="pageTitle">BasketBall Score</string>
+    <string name="reset">Reset</string>
     <string name="save">Save</string>
     <string name="display">Display</string>
     <string name="gameResultsString">Game Info Saved!</string>
     <string name="back">Back</string>
+    <string name="title_fragment">Single Game</string>
+    <string name="vs">VS.</string>
 </resources>

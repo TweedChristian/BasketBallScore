@@ -14,4 +14,6 @@
     <string name="title_fragment">Single Game</string>
     <string name="vs">VS.</string>
     <string name="teamImageDescription">The Logo For the Winning Team</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

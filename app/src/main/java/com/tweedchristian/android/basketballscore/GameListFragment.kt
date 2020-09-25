@@ -1,6 +1,8 @@
 package com.tweedchristian.android.basketballscore
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,19 +13,42 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
+import java.util.*
 
 private const val TAG = "GameListFragment"
+private const val ARG_WINNING_TEAM = "winningTeam"
 
 class GameListFragment : Fragment() {
+    interface Callbacks {
+        fun loadGameById(id: UUID)
+        fun loadGame(game: BasketBallGame)
+    }
+    private var callbacks: Callbacks? = null
+
     private var adapter: GameAdapter? = null
+    private var winningTeam: Char = TIE
     private lateinit var gameRecyclerView: RecyclerView
 
     private val gameListViewModel: BasketBallGameListViewModel by lazy {
         ViewModelProvider(this).get(BasketBallGameListViewModel::class.java)
     }
 
+    override fun onAttach(context: Context) {
+        Log.i(TAG, "Game List Fragment context loaded")
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        Log.i(TAG, "Game List Fragment unattatched")
+        super.onDetach()
+        callbacks = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        winningTeam = arguments?.getChar(ARG_WINNING_TEAM) ?: TIE
+        Log.i(TAG, "Argument loaded: $winningTeam")
     }
 
     override fun onCreateView(
@@ -31,7 +56,6 @@ class GameListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_game_list, container, false)
-
         gameRecyclerView = view.findViewById(R.id.gameRecyclerView)
         gameRecyclerView.layoutManager = LinearLayoutManager(context)
         updateUI()
@@ -39,18 +63,32 @@ class GameListFragment : Fragment() {
     }
 
     private fun updateUI() {
-        val games = gameListViewModel.games
+        val games = when (winningTeam) {
+            TEAM_A_WINNING -> gameListViewModel.games.filter{ it.winningTeam == TEAM_A_WINNING }
+            TEAM_B_WINNING -> gameListViewModel.games.filter{ it.winningTeam == TEAM_B_WINNING }
+            else -> gameListViewModel.games
+        }
+        Log.i(TAG, "Length of filtered games: ${games.size}")
         adapter = GameAdapter(games)
         gameRecyclerView.adapter = adapter
-    }
+        }
 
-    private inner class GameHolder(view: View): RecyclerView.ViewHolder(view) {
+    private inner class GameHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
         private lateinit var game: BasketBallGame
         val dateTextView: TextView = itemView.findViewById(R.id.gameDate)
         val teamOneNameTextView: TextView = itemView.findViewById(R.id.listTeamOneName)
         val teamTwoNameTextView: TextView = itemView.findViewById(R.id.listTeamTwoName)
         val teamScoreTextView: TextView = itemView.findViewById(R.id.teamScore)
         val winnerImageView: ImageView = itemView.findViewById(R.id.imageView)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            Log.i(TAG, "Game list item clicked")
+            callbacks?.loadGame(game)
+        }
 
         fun bind(game: BasketBallGame) {
             this.game = game
@@ -85,8 +123,13 @@ class GameListFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): GameListFragment {
-            return GameListFragment()
+        fun newInstance(winningTeam: Char): GameListFragment {
+            val fragArgs = Bundle().apply {
+                putChar(ARG_WINNING_TEAM, winningTeam)
+            }
+            return GameListFragment().apply {
+                arguments = fragArgs
+            }
         }
     }
 

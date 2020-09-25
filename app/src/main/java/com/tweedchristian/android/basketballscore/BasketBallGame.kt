@@ -3,6 +3,10 @@ package com.tweedchristian.android.basketballscore
 import java.util.*
 import kotlin.math.abs
 
+const val TEAM_A_WINNING = 'A'
+const val TEAM_B_WINNING = 'B'
+const val TIE= 'T'
+
 class BasketBallGame {
     private val gameId: UUID = UUID.randomUUID()
     private val playedDate: Date = Date()
@@ -54,4 +58,11 @@ class BasketBallGame {
 
     val date: Date
         get() = this.playedDate
+
+    val winningTeam: Char
+        get() = when {
+            teamOne.points > teamTwo.points -> TEAM_A_WINNING
+            teamOne.points < teamTwo.points -> TEAM_B_WINNING
+            else -> TIE
+        }
 }

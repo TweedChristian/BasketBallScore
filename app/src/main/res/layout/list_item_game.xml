@@ -9,7 +9,6 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-
     <TextView
         android:id="@+id/gameDate"
         android:layout_width="wrap_content"
@@ -48,7 +47,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gameDate"
         tools:text="TeamqerhgruhA" />
-
 
     <TextView
         android:id="@+id/textView3"
@@ -90,6 +88,4 @@
         app:layout_constraintStart_toEndOf="@+id/listTeamOneName"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         tools:text="40:50" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

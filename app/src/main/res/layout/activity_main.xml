@@ -141,12 +141,33 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <Button
-        android:id="@+id/resetButton"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="?attr/materialButtonOutlinedStyle"
-        android:text="@string/reset"
-        />
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?attr/materialButtonOutlinedStyle"
+            android:text="@string/save"
+            />
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?attr/materialButtonOutlinedStyle"
+            android:text="@string/reset"
+            android:layout_marginHorizontal="12dp"
+            />
+        <Button
+            android:id="@+id/displayButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?attr/materialButtonOutlinedStyle"
+            android:text="@string/display"
+            />
+    </LinearLayout>
 </LinearLayout>
 

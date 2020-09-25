@@ -5,12 +5,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:padding="18dp"
+    android:gravity="center_horizontal"
     tools:context=".GameResults">
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="40dp"
         android:layout_height="wrap_content"
         android:text='@string/gameResultsString'
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/gameResultsTeamA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                tools:text="Team A"
+                android:layout_margin="20dp"
+                />
+            <TextView
+                android:id="@+id/gameResultsTeamB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                tools:text="Team B"
+                android:layout_margin="20dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/gameResultsTeamAPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                tools:text="40 Points"
+                android:layout_margin="20dp"
+                />
+            <TextView
+                android:id="@+id/gameResultsTeamBPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                tools:text="80 Points"
+                android:layout_margin="20dp"
+                />
+        </LinearLayout>
+        <Button
+            android:id="@+id/backButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/back"
+            />
+    </LinearLayout>
 </LinearLayout>

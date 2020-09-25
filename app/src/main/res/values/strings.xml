@@ -7,4 +7,10 @@
     <string name="freeThrow">Free Throw</string>
     <string name="pageTitle">BasketBall Score</string>
     <string name="reset">Reset</string>
+    <string name="save">Save</string>
+    <string name="display">Display</string>
+    <string name="gameResultsString">Game Info Saved!</string>
+    <string name="back">Back</string>
+    <string name="title_fragment">Single Game</string>
+    <string name="vs">VS.</string>
 </resources>

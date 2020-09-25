@@ -6,36 +6,38 @@ import androidx.lifecycle.ViewModel
 private const val TAG = "BasketballViewModel"
 
 class BasketballViewModel: ViewModel() {
-    private var teamOnePoints: Int = 0
-    private var teamTwoPoints: Int = 0
+    private val game: BasketBallGame = BasketBallGame()
 
     val teamOneCurrentPoints: Int
-        get() = this.teamOnePoints
+        get() = this.game.getTeamOne.points
 
     val teamTwoCurrentPoints: Int
-        get() = this.teamTwoPoints
+        get() = this.game.getTeamTwo.points
+
+    val basketBallGame: BasketBallGame
+        get() = this.game
 
     fun resetPoints() {
      //   Log.i(TAG, "Resetting Points")
-        this.teamOnePoints = 0
-        this.teamTwoPoints = 0
+        this.game.reset(null, null)
     }
 
     fun updatePoints(teamOne: Boolean, pointAmount: Int){
         if(teamOne){
-            this.teamOnePoints += pointAmount
+            this.game.updatePoints(true, pointAmount)
     //        Log.i(TAG, "Added Team One Points: $pointAmount")
         }
         else {
-            this.teamTwoPoints += pointAmount
+            this.game.updatePoints(false, pointAmount)
      //       Log.i(TAG, "Added Team Two Points: $pointAmount")
         }
     }
 
     fun setPointsFromSavedState(teamOnePoints: Int, teamTwoPoints: Int) {
     //    Log.i(TAG, "Loading in team points: $teamOnePoints $teamTwoPoints")
-        this.teamOnePoints = teamOnePoints
-        this.teamTwoPoints = teamTwoPoints
+        this.game.reset(this.game.getTeamOne.name, this.game.getTeamTwo.name)
+        this.game.updatePoints(true, teamOnePoints)
+        this.game.updatePoints(false, teamTwoPoints)
     }
 
 }

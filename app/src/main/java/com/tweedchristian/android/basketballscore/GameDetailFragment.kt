@@ -12,19 +12,15 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import java.util.*
 
 private const val TAG = "GameDetailFragment"
-private const val TEAM_ONE_INDEX = "teamOne"
-private const val TEAM_TWO_INDEX = "teamTwo"
 
 private const val ARGS_UUID = "uuid"
 private const val ARGS_DATE = "date"
-private const val ARGS_TEAM_ONE_NAME = "teamOneName"
-private const val ARGS_TEAM_TWO_NAME = "teamTwoName"
-private const val ARGS_TEAM_ONE_POINTS = "teamOnePoints"
-private const val ARGS_TEAM_TWO_POINTS = "teamTwoPoints"
 
 class GameDetailFragment : Fragment() {
     interface Callbacks {
@@ -32,6 +28,8 @@ class GameDetailFragment : Fragment() {
     }
 
     private var callbacks: Callbacks? = null
+
+    private lateinit var game: Game
 
     private lateinit var teamOne3ShotButton: Button
     private lateinit var teamTwo3ShotButton: Button
@@ -54,11 +52,10 @@ class GameDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val teamOneName = arguments?.getString(ARGS_TEAM_ONE_NAME, "Team A") ?: "Team A"
-        val teamTwoName = arguments?.getString(ARGS_TEAM_TWO_NAME, "Team B") ?: "Team B"
-        val teamOnePoints = arguments?.getInt(ARGS_TEAM_ONE_POINTS, 0) ?: 0
-        val teamTwoPoints = arguments?.getInt(ARGS_TEAM_TWO_POINTS, 0) ?: 0
-        basketballViewModel.loadDataFromNewInstance(teamOnePoints, teamTwoPoints, teamOneName, teamTwoName)
+        val id = arguments?.getSerializable(ARGS_UUID) as UUID
+        basketballViewModel.loadGameById(id)
+        //If we want to load a bunch of fresh games
+        basketballViewModel.setupRepo(150)
     }
 
     override fun onCreateView(
@@ -66,45 +63,58 @@ class GameDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_game_detail, container, false)
+        val view =  inflater.inflate(R.layout.fragment_game_detail, container, false)
         teamButtonInit(view)
-        updateTeams()
         return view
-
-        /**Just in case*/
-        //       val teamOneInitialPoints = savedInstanceState?.getInt(TEAM_ONE_INDEX, 0) ?: 0
-//        val teamTwoInitialPoints = savedInstanceState?.getInt(TEAM_TWO_INDEX, 0) ?: 0
-//        basketballViewModel.setPointsFromSavedState(teamOneInitialPoints, teamTwoInitialPoints)
     }
 
-//    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-//        super.onSaveInstanceState(savedInstanceState)
-//
-//        savedInstanceState.putInt(TEAM_ONE_INDEX, basketballViewModel.teamOneCurrentPoints)
-//        savedInstanceState.putInt(TEAM_TWO_INDEX, basketballViewModel.teamTwoCurrentPoints)
-//    }
+    /**Just in case*/
+//    val teamOneInitialPoints = savedInstanceState?.getInt(TEAM_ONE_INDEX, 0) ?: 0
+//    val teamTwoInitialPoints = savedInstanceState?.getInt(TEAM_TWO_INDEX, 0) ?: 0
+//    val teamANameInitial = savedInstanceState?.getString(TEAM_A_NAME, "Team A") ?: "Team A"
+//    val teamBNameInitial = savedInstanceState?.getString(TEAM_B_NAME, "Team B") ?: "Team B"
+//    basketballViewModel.loadDataFromNewInstance(teamOneInitialPoints, teamTwoInitialPoints, teamANameInitial, teamBNameInitial)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        basketballViewModel.gameLiveData.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { game ->
+                game?.let{
+                    this.game = game
+
+                    updateTeams()
+                }
+            }
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        basketballViewModel.saveGame(game)
+    }
 
     companion object {
-        fun newInstance(teamOneName: String, teamTwoName: String, teamOnePoints: Int, teamTwoPoints: Int): GameDetailFragment {
+        fun newInstance(id: UUID): GameDetailFragment {
             var args = Bundle()
-//                .apply {
-//                    putSerializable(ARGS_UUID, gameId)
-//                }
                 .apply {
-                    putString(ARGS_TEAM_ONE_NAME, teamOneName)
-                }
-                .apply {
-                  putString(ARGS_TEAM_TWO_NAME, teamTwoName)
+                    putSerializable(ARGS_UUID, id)
                 }
 //                .apply {
-//                    putString(ARGS_DATE, date.toString())
+//                    putString(ARGS_TEAM_ONE_NAME, teamOneName)
 //                }
-                .apply {
-                    putInt(ARGS_TEAM_ONE_POINTS, teamOnePoints)
-                }
-                .apply {
-                    putInt(ARGS_TEAM_TWO_POINTS, teamTwoPoints)
-                }
+//                .apply {
+//                  putString(ARGS_TEAM_TWO_NAME, teamTwoName)
+//                }
+////                .apply {
+////                    putString(ARGS_DATE, date.toString())
+////                }
+//                .apply {
+//                    putInt(ARGS_TEAM_ONE_POINTS, teamOnePoints)
+//                }
+//                .apply {
+//                    putInt(ARGS_TEAM_TWO_POINTS, teamTwoPoints)
+//                }
             return GameDetailFragment().apply {
                 arguments = args
             }
@@ -118,7 +128,7 @@ class GameDetailFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                basketballViewModel.basketBallGame.updateTeamName(true, s.toString())
+                game.teamAName = s.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -130,7 +140,7 @@ class GameDetailFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                basketballViewModel.basketBallGame.updateTeamName(false, s.toString())
+                game.teamBName = s.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -155,10 +165,10 @@ class GameDetailFragment : Fragment() {
      * A function to update the displayed text to what is stored in the view model
      */
     private fun updateTeams() {
-        teamOnePointsTextView.text = basketballViewModel.teamOneCurrentPoints.toString()
-        teamTwoPointsTextView.text = basketballViewModel.teamTwoCurrentPoints.toString()
-        teamOneTitle.setText(basketballViewModel.basketBallGame.teamAName)
-        teamTwoTitle.setText(basketballViewModel.basketBallGame.teamBName)
+        teamOnePointsTextView.text = game.teamAScore.toString()
+        teamTwoPointsTextView.text = game.teamBScore.toString()
+        teamOneTitle.setText(game.teamAName)
+        teamTwoTitle.setText(game.teamBName)
     }
 
     /**
@@ -189,42 +199,52 @@ class GameDetailFragment : Fragment() {
 //        Setting Callbacks
 
         teamOne3ShotButton.setOnClickListener {
-            basketballViewModel.updatePoints(true, 3)
+            game.teamAScore += 3
             updateTeams()
         }
 
         teamOne2ShotButton.setOnClickListener {
-            basketballViewModel.updatePoints(true, 2)
+            game.teamAScore += 2
             updateTeams()
         }
 
         teamOneFreeThrowButton.setOnClickListener {
-            basketballViewModel.updatePoints(true, 1)
+            game.teamAScore += 1
             updateTeams()
         }
 
         teamTwo3ShotButton.setOnClickListener {
-            basketballViewModel.updatePoints(false, 3)
+            game.teamBScore += 3
             updateTeams()
         }
 
         teamTwo2ShotButton.setOnClickListener {
-            basketballViewModel.updatePoints(false, 2)
+            game.teamBScore += 2
             updateTeams()
         }
 
         teamTwoFreeThrowButton.setOnClickListener {
-            basketballViewModel.updatePoints(false, 1)
+            game.teamBScore += 1
             updateTeams()
         }
 
+        saveButton.setOnClickListener {
+            basketballViewModel.saveGame(game)
+//            Toast.makeText(
+//                this,
+//                R.string.saved,
+//                Toast.LENGTH_SHORT
+//            ).show()
+        }
+
         resetButton.setOnClickListener {
-            basketballViewModel.resetPoints()
+            game.teamAScore = 0
+            game.teamBScore = 0
             updateTeams()
         }
 
         displayButton.setOnClickListener {
-            callbacks?.loadWinningList(basketballViewModel.winningTeam)
+            callbacks?.loadWinningList(game.winningTeam)
         }
 
 //        Hide Keyboard and Clear Focus on Click-away

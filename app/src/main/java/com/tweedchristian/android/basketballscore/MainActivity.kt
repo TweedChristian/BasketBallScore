@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         val currentFragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer)
         if(currentFragment == null) {
-            val game = Game()
-            val fragment = GameDetailFragment.newInstance(game.teamAName, game.teamBName, game.teamAScore, game.teamBScore)
+            //Dummy Id to load a game first
+            val fragment = GameDetailFragment.newInstance(UUID.fromString("3d50a644-0b29-4510-8528-b1950f2e39e1"))
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.mainFragmentContainer, fragment)
@@ -44,11 +44,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun loadGameById(id: UUID) {
-        TODO("Load From DB")
-    }
-
-    override fun loadGame(game: Game) {
-        val fragment = GameDetailFragment.newInstance(game.teamAName, game.teamBName, game.teamAScore, game.teamBScore)
+        val fragment = GameDetailFragment.newInstance(id)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.mainFragmentContainer, fragment)

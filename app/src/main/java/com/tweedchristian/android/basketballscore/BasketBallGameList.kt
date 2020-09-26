@@ -1,26 +1,12 @@
 package com.tweedchristian.android.basketballscore
 
-import android.util.Log
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import java.util.*
 
 private const val TAG = "GameListViewModel"
 
 class BasketBallGameListViewModel : ViewModel() {
-    private val basketBallGames = mutableListOf<Game>()
     private val gameRepository = GameRepository.get()
     val publicGames = gameRepository.getGames()
-
-    val games: List<Game>
-        get() = this.basketBallGames
-
-    init {
-        for(i in 0 until 100) {
-            val game = Game()
-            basketBallGames += game
-        }
-    }
 
 //    val rows = listOf(
 //        "bf572937-763d-48e0-a03f-798b70f30c99|Team 6KxsEjkV|Team BrFmIV7W|45|48|1599618577627",
@@ -124,18 +110,4 @@ class BasketBallGameListViewModel : ViewModel() {
 //        "5e148f0f-cfa7-4ee5-a608-345b9bce98da|Team 6cmr6GWl|Team KeyBCKEK|6|70|1599618577682",
 //        "3d50a644-0b29-4510-8528-b1950f2e39e1|Team BR8nTYoO|Team TeMEFNkt|39|77|1599618577682",
 //    )
-//    for(row in rows){
-//        addRow(row)
-//    }
-//    private fun addRow(dataString: String) {
-//        val splits = dataString.split("|")
-//        val uuid = UUID.fromString(splits[0])
-//        val teamOneName = splits[1]
-//        val teamTwoName = splits[2]
-//        val teamOnePoints = splits[3].toInt()
-//        val teamTwoPoints = splits[4].toInt()
-//        val milliseconds = splits[5].toLong()
-//        val game = Game(uuid, teamOneName, teamTwoName, teamOnePoints, teamTwoPoints, Date(milliseconds))
-////        gameRepository.addGame(game)
-//    }
 }

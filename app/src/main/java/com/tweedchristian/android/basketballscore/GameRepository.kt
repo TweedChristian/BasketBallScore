@@ -24,7 +24,6 @@ class GameRepository private constructor(context: Context) {
     private val executor = Executors.newSingleThreadExecutor()
 
     fun getGames(): LiveData<List<Game>> = gameDao.getGames()
-
     fun getGame(id: UUID): LiveData<Game?> = gameDao.getGame(id)
 
     fun addGame(game: Game) {

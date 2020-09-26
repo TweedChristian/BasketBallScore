@@ -21,11 +21,10 @@ private const val ARG_WINNING_TEAM = "winningTeam"
 class GameListFragment : Fragment() {
     interface Callbacks {
         fun loadGameById(id: UUID)
-        fun loadGame(game: Game)
     }
     private var callbacks: Callbacks? = null
 
-    private var adapter: GameAdapter? = null
+    private var adapter: GameAdapter? = GameAdapter(emptyList())
     private var winningTeam: Char = TIE
     private lateinit var gameRecyclerView: RecyclerView
 
@@ -55,7 +54,7 @@ class GameListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_game_list, container, false)
         gameRecyclerView = view.findViewById(R.id.gameRecyclerView)
         gameRecyclerView.layoutManager = LinearLayoutManager(context)
-        updateUI()
+        gameRecyclerView.adapter = adapter
         return view
     }
 
@@ -65,20 +64,20 @@ class GameListFragment : Fragment() {
             viewLifecycleOwner,
             androidx.lifecycle.Observer { games ->
                 games?.let {
-                    Log.i(TAG, "Got games ${games.size}")
-                    Log.i(TAG, games[0].teamAName)
+                    updateUI(games)
                 }
             }
         )
     }
 
-    private fun updateUI() {
-        val games = when (winningTeam) {
-            TEAM_A_WINNING -> gameListViewModel.games.filter{ it.winningTeam == TEAM_A_WINNING }
-            TEAM_B_WINNING -> gameListViewModel.games.filter{ it.winningTeam == TEAM_B_WINNING }
-            else -> gameListViewModel.games
+    private fun updateUI(games: List<Game>) {
+
+        val filteredGames = when (winningTeam) {
+            TEAM_A_WINNING -> games.filter{ it.winningTeam == TEAM_A_WINNING }
+            TEAM_B_WINNING -> games.filter{ it.winningTeam == TEAM_B_WINNING }
+            else -> games
         }
-        adapter = GameAdapter(games)
+        adapter = GameAdapter(filteredGames)
         gameRecyclerView.adapter = adapter
         }
 
@@ -95,7 +94,7 @@ class GameListFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            callbacks?.loadGame(game)
+            callbacks?.loadGameById(game.id)
         }
 
         fun bind(game: Game) {

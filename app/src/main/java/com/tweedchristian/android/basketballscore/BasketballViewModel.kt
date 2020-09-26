@@ -5,17 +5,16 @@ import androidx.lifecycle.ViewModel
 
 private const val TAG = "BasketballViewModel"
 
-
 class BasketballViewModel: ViewModel() {
-    private val game: BasketBallGame = BasketBallGame()
+    private val game: Game = Game()
 
     val teamOneCurrentPoints: Int
-        get() = this.game.getTeamOne.points
+        get() = this.game.teamAScore
 
     val teamTwoCurrentPoints: Int
-        get() = this.game.getTeamTwo.points
+        get() = this.game.teamBScore
 
-    val basketBallGame: BasketBallGame
+    val basketBallGame: Game
         get() = this.game
 
     val winningTeam: Char
@@ -35,16 +34,14 @@ class BasketballViewModel: ViewModel() {
     }
 
     fun setPointsFromSavedState(teamOnePoints: Int, teamTwoPoints: Int) {
-        this.game.reset(this.game.getTeamOne.name, this.game.getTeamTwo.name)
+        this.game.reset(this.game.teamAName, this.game.teamBName)
         this.game.updatePoints(true, teamOnePoints)
         this.game.updatePoints(false, teamTwoPoints)
     }
 
     fun loadDataFromNewInstance(teamOnePoints: Int, teamTwoPoints: Int, teamOneName: String, teamTwoName: String) {
-        Log.i(TAG, teamOneName)
         this.game.reset(teamOneName, teamTwoName)
         this.game.updatePoints(true, teamOnePoints)
         this.game.updatePoints(false, teamTwoPoints)
-        Log.i(TAG, this.game.getTeamOne.name)
     }
 }

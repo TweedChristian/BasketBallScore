@@ -21,7 +21,7 @@ private const val ARG_WINNING_TEAM = "winningTeam"
 class GameListFragment : Fragment() {
     interface Callbacks {
         fun loadGameById(id: UUID)
-        fun loadGame(game: BasketBallGame)
+        fun loadGame(game: Game)
     }
     private var callbacks: Callbacks? = null
 
@@ -34,13 +34,11 @@ class GameListFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        Log.i(TAG, "Game List Fragment context loaded")
         super.onAttach(context)
         callbacks = context as Callbacks?
     }
 
     override fun onDetach() {
-        Log.i(TAG, "Game List Fragment unattatched")
         super.onDetach()
         callbacks = null
     }
@@ -48,7 +46,6 @@ class GameListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         winningTeam = arguments?.getChar(ARG_WINNING_TEAM) ?: TIE
-        Log.i(TAG, "Argument loaded: $winningTeam")
     }
 
     override fun onCreateView(
@@ -62,19 +59,31 @@ class GameListFragment : Fragment() {
         return view
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        gameListViewModel.publicGames.observe(
+            viewLifecycleOwner,
+            androidx.lifecycle.Observer { games ->
+                games?.let {
+                    Log.i(TAG, "Got games ${games.size}")
+                    Log.i(TAG, games[0].teamAName)
+                }
+            }
+        )
+    }
+
     private fun updateUI() {
         val games = when (winningTeam) {
             TEAM_A_WINNING -> gameListViewModel.games.filter{ it.winningTeam == TEAM_A_WINNING }
             TEAM_B_WINNING -> gameListViewModel.games.filter{ it.winningTeam == TEAM_B_WINNING }
             else -> gameListViewModel.games
         }
-        Log.i(TAG, "Length of filtered games: ${games.size}")
         adapter = GameAdapter(games)
         gameRecyclerView.adapter = adapter
         }
 
     private inner class GameHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
-        private lateinit var game: BasketBallGame
+        private lateinit var game: Game
         val dateTextView: TextView = itemView.findViewById(R.id.gameDate)
         val teamOneNameTextView: TextView = itemView.findViewById(R.id.listTeamOneName)
         val teamTwoNameTextView: TextView = itemView.findViewById(R.id.listTeamTwoName)
@@ -86,19 +95,18 @@ class GameListFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            Log.i(TAG, "Game list item clicked")
             callbacks?.loadGame(game)
         }
 
-        fun bind(game: BasketBallGame) {
+        fun bind(game: Game) {
             this.game = game
             dateTextView.text = game.date.toString()
-            teamOneNameTextView.text = game.getTeamOne.name
-            teamTwoNameTextView.text = game.getTeamTwo.name
-            teamScoreTextView.text = loadGameScore(game.getTeamOne.points, game.getTeamTwo.points)
+            teamOneNameTextView.text = game.teamAName
+            teamTwoNameTextView.text = game.teamBName
+            teamScoreTextView.text = loadGameScore(game.teamAScore, game.teamBScore)
             when {
-                game.getTeamOne.points > game.getTeamTwo.points -> winnerImageView.setImageResource(R.drawable.keet)
-                game.getTeamOne.points < game.getTeamTwo.points -> winnerImageView.setImageResource(R.drawable.kobaka)
+                game.teamAScore > game.teamBScore -> winnerImageView.setImageResource(R.drawable.keet)
+                game.teamAScore < game.teamBScore -> winnerImageView.setImageResource(R.drawable.kobaka)
                 else -> winnerImageView.setImageResource(R.drawable.minion)
             }
         }
@@ -108,7 +116,7 @@ class GameListFragment : Fragment() {
         }
     }
 
-    private inner class GameAdapter(var games: List<BasketBallGame>): RecyclerView.Adapter<GameHolder>() {
+    private inner class GameAdapter(var games: List<Game>): RecyclerView.Adapter<GameHolder>() {
         override fun getItemCount() = games.size
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHolder {
@@ -132,5 +140,4 @@ class GameListFragment : Fragment() {
             }
         }
     }
-
 }

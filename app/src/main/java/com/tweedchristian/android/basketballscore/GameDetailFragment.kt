@@ -54,7 +54,6 @@ class GameDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, arguments.toString())
         val teamOneName = arguments?.getString(ARGS_TEAM_ONE_NAME, "Team A") ?: "Team A"
         val teamTwoName = arguments?.getString(ARGS_TEAM_TWO_NAME, "Team B") ?: "Team B"
         val teamOnePoints = arguments?.getInt(ARGS_TEAM_ONE_POINTS, 0) ?: 0
@@ -143,13 +142,11 @@ class GameDetailFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        Log.i(TAG, "Context Loaded into Detail Fragment")
         super.onAttach(context)
         callbacks = context as Callbacks?
     }
 
     override fun onDetach() {
-        Log.i(TAG, "Detail Fragment Unloaded")
         super.onDetach()
         callbacks = null
     }
@@ -160,8 +157,8 @@ class GameDetailFragment : Fragment() {
     private fun updateTeams() {
         teamOnePointsTextView.text = basketballViewModel.teamOneCurrentPoints.toString()
         teamTwoPointsTextView.text = basketballViewModel.teamTwoCurrentPoints.toString()
-        teamOneTitle.setText(basketballViewModel.basketBallGame.getTeamOne.name)
-        teamTwoTitle.setText(basketballViewModel.basketBallGame.getTeamTwo.name)
+        teamOneTitle.setText(basketballViewModel.basketBallGame.teamAName)
+        teamTwoTitle.setText(basketballViewModel.basketBallGame.teamBName)
     }
 
     /**
@@ -227,7 +224,6 @@ class GameDetailFragment : Fragment() {
         }
 
         displayButton.setOnClickListener {
-            Log.i(TAG, "Display button clicked")
             callbacks?.loadWinningList(basketballViewModel.winningTeam)
         }
 

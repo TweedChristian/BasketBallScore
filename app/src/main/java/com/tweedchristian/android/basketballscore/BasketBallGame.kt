@@ -1,5 +1,7 @@
 package com.tweedchristian.android.basketballscore
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.*
 import kotlin.math.abs
 
@@ -7,62 +9,63 @@ const val TEAM_A_WINNING = 'A'
 const val TEAM_B_WINNING = 'B'
 const val TIE= 'T'
 
-class BasketBallGame {
-    private val gameId: UUID = UUID.randomUUID()
-    private val playedDate: Date = Date()
-    private val teamOne: BasketBallTeam = BasketBallTeam("Team A")
-    private val teamTwo: BasketBallTeam = BasketBallTeam("Team B")
-
-    fun updatePoints(teamOne: Boolean, pointAmount: Int) {
-        if(teamOne) {
-            this.teamOne.updatePoints(pointAmount)
+@Entity (tableName = "table_game")
+data class Game(
+    @PrimaryKey val id: UUID = UUID.randomUUID(),
+    var teamAName: String = "Team One",
+    var teamBName: String = "Team Two",
+    var teamAScore: Int = 0,
+    var teamBScore: Int = 0,
+    var date: Date = Date()
+    ) {
+    fun updatePoints(teamA: Boolean, pointAmount: Int) {
+        if(teamA) {
+            this.teamAScore += pointAmount
         }
         else {
-            this.teamTwo.updatePoints(pointAmount)
+            this.teamBScore += pointAmount
         }
     }
 
-    fun reset(teamOneName: String?, teamTwoName: String?) {
-        this.teamOne.reset(teamOneName ?: "Team A")
-        this.teamTwo.reset(teamTwoName ?: "Team B")
+    fun reset(teamAName: String?, teamBName: String?) {
+        this.teamAScore = 0
+        this.teamBScore = 0
+        this.teamAName = teamAName ?: "Team A"
+        this.teamBName = teamBName ?: "Team B"
     }
 
-    fun updateTeamName(teamOne: Boolean, newTeamName: String) {
-        if(teamOne) {
-            this.teamOne.updateTeamName(newTeamName)
+    fun updateTeamName(teamA: Boolean, newTeamName: String) {
+        if(teamA) {
+            this.teamAName = newTeamName
         }
         else {
-            this.teamTwo.updateTeamName(newTeamName)
+            this.teamBName = newTeamName
         }
     }
-
-    fun randomInit() {
-        val random = Random()
-        teamOne.updatePoints(abs(random.nextInt() % 100))
-        teamTwo.updatePoints(abs(random.nextInt() % 100))
-        val alphabet: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        val randomString1: String = List(20) { alphabet.random() }.joinToString("")
-        val randomString2: String = List(20) { alphabet.random() }.joinToString("")
-        teamOne.updateTeamName(randomString1)
-        teamTwo.updateTeamName(randomString2)
-    }
-
-    val getTeamOne: BasketBallTeam
-        get() = this.teamOne
-
-    val getTeamTwo: BasketBallTeam
-        get() = this.teamTwo
-
-    val id: UUID
-        get() = this.gameId
-
-    val date: Date
-        get() = this.playedDate
 
     val winningTeam: Char
         get() = when {
-            teamOne.points > teamTwo.points -> TEAM_A_WINNING
-            teamOne.points < teamTwo.points -> TEAM_B_WINNING
+            teamAScore > teamBScore -> TEAM_A_WINNING
+            teamAScore < teamBScore -> TEAM_B_WINNING
             else -> TIE
         }
+
+    val getId: UUID
+        get() = id
+
+    val getDate: Date
+        get() = date
+
+    val getTeamAName: String
+        get() = teamAName
+
+    val getTeamBName: String
+        get() = teamBName
+
+    val getTeamAScore: Int
+        get() = teamAScore
+
+    val getTeamBScore: Int
+        get() = teamBScore
 }
+

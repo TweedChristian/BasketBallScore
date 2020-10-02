@@ -57,10 +57,23 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/shutterButtonDescription"
                         android:src="@drawable/baseline_camera_black_24"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/teamOneSoundButton"
                         app:layout_constraintEnd_toStartOf="@+id/teamOnePoints"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/teamOneImage" />
+
+                    <ImageButton
+                        android:id="@+id/teamOneSoundButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:contentDescription="@string/phoneSpeakerButtonDescription"
+                        android:src="@drawable/baseline_speaker_phone_black_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/teamOnePoints"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/teamOneImage"
+                        app:layout_constraintVertical_bias="1.0" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/teamOnePoints"
@@ -161,10 +174,23 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/shutterButtonDescription"
                         android:src="@drawable/baseline_camera_black_24"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/teamTwoSoundButton"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/teamTwoPoints"
                         app:layout_constraintTop_toBottomOf="@+id/teamTwoImage" />
+
+                    <ImageButton
+                        android:id="@+id/teamTwoSoundButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:contentDescription="@string/phoneSpeakerButtonDescription"
+                        android:src="@drawable/baseline_speaker_phone_black_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/teamTwoPoints"
+                        app:layout_constraintTop_toBottomOf="@+id/teamTwoImage"
+                        app:layout_constraintVertical_bias="1.0" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/teamTwoPoints"

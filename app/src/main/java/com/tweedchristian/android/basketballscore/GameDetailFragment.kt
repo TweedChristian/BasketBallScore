@@ -22,8 +22,17 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
+import com.tweedchristian.android.basketballscore.api.WeatherAPI
+import com.tweedchristian.android.basketballscore.api.WeatherData
+import com.tweedchristian.android.basketballscore.api.WeatherFetcher
 import kotlinx.android.synthetic.main.fragment_game_detail.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -71,6 +80,8 @@ class GameDetailFragment : Fragment() {
     private lateinit var teamOneTitle: EditText
     private lateinit var teamTwoTitle: EditText
 
+    private lateinit var jsonTextView: TextView
+
     private val basketballViewModel: BasketballViewModel by lazy {
         ViewModelProvider(this).get(BasketballViewModel::class.java)
     }
@@ -80,11 +91,8 @@ class GameDetailFragment : Fragment() {
         val id = arguments?.getSerializable(ARGS_UUID) as UUID
         basketballViewModel.loadGameById(id)
         //If we want to load a bunch of fresh games
-//        basketballViewModel.setupRepo(150)
+        //basketballViewModel.setupRepo(150)
     }
-//    private val assets: AssetManager
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -107,7 +115,7 @@ class GameDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         basketballViewModel.gameLiveData.observe(
             viewLifecycleOwner,
-            androidx.lifecycle.Observer { game ->
+             { game ->
                 game?.let{
                     this.game = game
                     teamOnePhotoFile = basketballViewModel.getTeamOnePhotoFile(game)
@@ -122,6 +130,15 @@ class GameDetailFragment : Fragment() {
                 }
             }
         )
+
+        val weatherLiveData: LiveData<WeatherData> = WeatherFetcher().fetchContents()
+        weatherLiveData.observe(
+            viewLifecycleOwner,
+            { responseString ->
+                val weatherString: String = "${responseString.name}, avg: ${responseString.temperature.temperature} degrees, min: ${responseString.temperature.temperatureMinimum} degrees, max: ${responseString.temperature.temperatureMaximum} degrees, feels like: ${responseString.temperature.feelsLike} degrees"
+                jsonTextView.text = weatherString
+                Log.d(TAG, "Response Received: $responseString")
+            })
     }
 
     override fun onStop() {
@@ -326,6 +343,9 @@ class GameDetailFragment : Fragment() {
      * A function that finds all the buttons and text views and set up callbacks
      */
     private fun teamButtonInit(view: View) {
+        //API Text View
+        jsonTextView = view.findViewById(R.id.jsonTextView)
+
         //Team One Init
         teamOne3ShotButton = view.findViewById(R.id.teamOne3Points)
         teamOne2ShotButton = view.findViewById(R.id.teamOne2Points)

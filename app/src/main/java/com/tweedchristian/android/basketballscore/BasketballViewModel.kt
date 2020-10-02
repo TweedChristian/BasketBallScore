@@ -47,12 +47,4 @@ class BasketballViewModel(): ViewModel() {
         return gameRepository.getTeamTwoPhotoFile(game)
     }
 
-    fun playSound(isTeamOne: Boolean) {
-        if(isTeamOne){
-            gameRepository.playTeamOneSound()
-        }
-        else {
-            gameRepository.playTeamTwoSound()
-        }
-    }
 }

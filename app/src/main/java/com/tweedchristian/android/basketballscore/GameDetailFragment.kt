@@ -63,8 +63,6 @@ class GameDetailFragment : Fragment() {
     private lateinit var teamTwoPhotoFile: File
     private lateinit var teamOnePhotoUri: Uri
     private lateinit var teamTwoPhotoUri: Uri
-    private lateinit var teamOneSoundButton: ImageButton
-    private lateinit var teamTwoSoundButton: ImageButton
 
     private lateinit var teamOnePointsTextView: TextView
     private lateinit var teamTwoPointsTextView: TextView
@@ -335,7 +333,6 @@ class GameDetailFragment : Fragment() {
         teamOneTitle.clearFocus()
         teamOneImageButton = view.findViewById(R.id.teamOneImageButton)
         teamOneImageView = view.findViewById(R.id.teamOneImage)
-        teamOneSoundButton = view.findViewById(R.id.teamOneSoundButton)
 
         //Team Two Init
         teamTwo3ShotButton = view.findViewById(R.id.teamTwo3Points)
@@ -346,7 +343,6 @@ class GameDetailFragment : Fragment() {
         teamTwoTitle.clearFocus()
         teamTwoImageButton = view.findViewById(R.id.teamTwoImageButton)
         teamTwoImageView = view.findViewById(R.id.teamTwoImage)
-        teamTwoSoundButton = view.findViewById(R.id.teamTwoSoundButton)
 
 //        Utility Buttons
         resetButton = view.findViewById(R.id.resetButton)
@@ -402,14 +398,6 @@ class GameDetailFragment : Fragment() {
 
         displayButton.setOnClickListener {
             callbacks?.loadWinningList(game.winningTeam)
-        }
-
-        teamOneSoundButton.setOnClickListener {
-            basketballViewModel.playSound(true)
-        }
-
-        teamTwoSoundButton.setOnClickListener {
-            basketballViewModel.playSound(false)
         }
 
 //        Hide Keyboard and Clear Focus on Click-away

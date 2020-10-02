@@ -5,6 +5,6 @@ import android.app.Application
 class BasketBallSCoreApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        GameRepository.initialize(this, assets)
+        GameRepository.initialize(this)
     }
 }

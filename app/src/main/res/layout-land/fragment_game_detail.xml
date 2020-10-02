@@ -7,16 +7,15 @@
     android:id="@+id/root"
     tools:context=".GameDetailFragment">
     <LinearLayout
-        android:gravity="center"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:divider="?android:dividerHorizontal"
             android:showDividers="middle"
             android:baselineAligned="false">
@@ -32,45 +31,96 @@
                     android:gravity="center"
                     android:id="@+id/teamOneName"
                     android:text="@string/teamA" />
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/teamOnePoints"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="55sp"
-                    android:gravity="center"
-                    />
-                <LinearLayout
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/teamOneImage"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:background="@android:color/darker_gray"
+                        android:cropToPadding="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/teamOneLogo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+
+                    <ImageButton
+                        android:id="@+id/teamOneImageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/shutterButtonDescription"
+                        android:src="@drawable/baseline_camera_black_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/teamOnePoints"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/teamOneImage" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/teamOnePoints"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="40dp"
+                        android:textSize="55sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/teamOneImage"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:orientation="vertical">-->
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
+
                     <Button
                         android:id="@+id/teamOne3Points"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        app:backgroundTint="@color/colorPrimary"
                         android:text="@string/points3"
-                        />
+                        app:backgroundTint="@color/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/teamOneFreeThrow"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
                     <Button
                         android:id="@+id/teamOne2Points"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        app:backgroundTint="@color/colorPrimary"
                         android:text="@string/points2"
-                        />
+                        app:backgroundTint="@color/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/teamOneFreeThrow"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
                     <Button
                         android:id="@+id/teamOneFreeThrow"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        app:backgroundTint="@color/colorPrimary"
                         android:text="@string/freeThrow"
-                        />
-                </LinearLayout>
+                        app:backgroundTint="@color/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--                </LinearLayout>-->
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
@@ -85,47 +135,131 @@
                     android:gravity="center"
                     android:id="@+id/teamTwoName"
                     android:text="@string/teamB" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/teamTwoPoints"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="55sp"
-                    android:gravity="center"
-                    />
+                    android:layout_height="match_parent">
 
-                <LinearLayout
+                    <ImageView
+                        android:id="@+id/teamTwoImage"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:background="@android:color/darker_gray"
+                        android:cropToPadding="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/teamTwoLogo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+
+                    <ImageButton
+                        android:id="@+id/teamTwoImageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/shutterButtonDescription"
+                        android:src="@drawable/baseline_camera_black_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/teamTwoPoints"
+                        app:layout_constraintTop_toBottomOf="@+id/teamTwoImage" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/teamTwoPoints"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="40dp"
+                        android:textSize="55sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/teamTwoImage"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+<!--                <com.google.android.material.textview.MaterialTextView-->
+<!--                    android:id="@+id/teamTwoPoints"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="55sp"-->
+<!--                    android:gravity="center"-->
+<!--                    />-->
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
+
                     <Button
                         android:id="@+id/teamTwo3Points"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        app:backgroundTint="@color/colorPrimary"
                         android:text="@string/points3"
-                        />
+                        app:backgroundTint="@color/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/teamTwoFreeThrow"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
                     <Button
                         android:id="@+id/teamTwo2Points"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        app:backgroundTint="@color/colorPrimary"
                         android:text="@string/points2"
-                        />
+                        app:backgroundTint="@color/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/teamTwoFreeThrow"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
                     <Button
                         android:id="@+id/teamTwoFreeThrow"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        app:backgroundTint="@color/colorPrimary"
                         android:text="@string/freeThrow"
-                        />
-                </LinearLayout>
+                        app:backgroundTint="@color/colorPrimary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:orientation="vertical">-->
+<!--                    <Button-->
+<!--                        android:id="@+id/teamTwo3Points"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="15dp"-->
+<!--                        android:layout_marginRight="15dp"-->
+<!--                        app:backgroundTint="@color/colorPrimary"-->
+<!--                        android:text="@string/points3"-->
+<!--                        />-->
+<!--                    <Button-->
+<!--                        android:id="@+id/teamTwo2Points"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="15dp"-->
+<!--                        android:layout_marginRight="15dp"-->
+<!--                        app:backgroundTint="@color/colorPrimary"-->
+<!--                        android:text="@string/points2"-->
+<!--                        />-->
+<!--                    <Button-->
+<!--                        android:id="@+id/teamTwoFreeThrow"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="15dp"-->
+<!--                        android:layout_marginRight="15dp"-->
+<!--                        app:backgroundTint="@color/colorPrimary"-->
+<!--                        android:text="@string/freeThrow"-->
+<!--                        />-->
+<!--                </LinearLayout>-->
             </LinearLayout>
         </LinearLayout>
         <LinearLayout

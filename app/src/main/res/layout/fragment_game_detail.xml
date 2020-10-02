@@ -35,15 +35,55 @@
                     android:padding="16dp"
                     android:text="@string/teamA"
                     android:inputType="text" />
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/teamOnePoints"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="55sp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="40dp"
-                    android:gravity="center"
-                    />
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/teamOneImage"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:background="@android:color/darker_gray"
+                            android:cropToPadding="true"
+                            android:scaleType="centerInside"
+                            android:contentDescription="@string/teamOneLogo"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+
+
+                        <ImageButton
+                            android:id="@+id/teamOneImageButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/shutterButtonDescription"
+                            android:src="@drawable/baseline_camera_black_24"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/teamOnePoints"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/teamOneImage" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/teamOnePoints"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="40dp"
+                            android:textSize="55sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/teamOneImage"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -99,16 +139,51 @@
                     android:inputType="text"
                     android:text="@string/teamB" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/teamTwoPoints"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="55sp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="40dp"
-                    android:gravity="center"
-                    />
+                    android:layout_height="match_parent">
 
+                    <ImageView
+                        android:id="@+id/teamTwoImage"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:background="@android:color/darker_gray"
+                        android:cropToPadding="true"
+                        android:scaleType="centerInside"
+                        android:contentDescription="@string/teamTwoLogo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+
+                    <ImageButton
+                        android:id="@+id/teamTwoImageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/shutterButtonDescription"
+                        android:src="@drawable/baseline_camera_black_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/teamTwoPoints"
+                        app:layout_constraintTop_toBottomOf="@+id/teamTwoImage" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/teamTwoPoints"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="40dp"
+                        android:textSize="55sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/teamTwoImage"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

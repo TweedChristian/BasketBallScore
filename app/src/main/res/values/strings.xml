@@ -15,4 +15,7 @@
     <string name="title_fragment">Single Game</string>
     <string name="vs">VS.</string>
     <string name="teamImageDescription">The Logo For the Winning Team</string>
+    <string name="shutterButtonDescription">Camera Shutter Button</string>
+    <string name="teamOneLogo">The Logo for Team One</string>
+    <string name="teamTwoLogo">The Logo for Team Two</string>
 </resources>

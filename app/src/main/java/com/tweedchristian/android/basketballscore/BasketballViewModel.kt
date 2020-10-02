@@ -1,6 +1,5 @@
 package com.tweedchristian.android.basketballscore
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -10,8 +9,7 @@ import java.lang.Math.abs
 import java.util.*
 
 private const val TAG = "BasketballViewModel"
-
-class BasketballViewModel: ViewModel() {
+class BasketballViewModel(): ViewModel() {
     private val gameRepository = GameRepository.get()
     private val gameIdLiveData = MutableLiveData<UUID>()
 
@@ -47,5 +45,14 @@ class BasketballViewModel: ViewModel() {
 
     fun getTeamTwoPhotoFile(game: Game): File {
         return gameRepository.getTeamTwoPhotoFile(game)
+    }
+
+    fun playSound(isTeamOne: Boolean) {
+        if(isTeamOne){
+            gameRepository.playTeamOneSound()
+        }
+        else {
+            gameRepository.playTeamTwoSound()
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
@@ -62,6 +63,8 @@ class GameDetailFragment : Fragment() {
     private lateinit var teamTwoPhotoFile: File
     private lateinit var teamOnePhotoUri: Uri
     private lateinit var teamTwoPhotoUri: Uri
+    private lateinit var teamOneSoundButton: ImageButton
+    private lateinit var teamTwoSoundButton: ImageButton
 
     private lateinit var teamOnePointsTextView: TextView
     private lateinit var teamTwoPointsTextView: TextView
@@ -77,8 +80,11 @@ class GameDetailFragment : Fragment() {
         val id = arguments?.getSerializable(ARGS_UUID) as UUID
         basketballViewModel.loadGameById(id)
         //If we want to load a bunch of fresh games
-        basketballViewModel.setupRepo(150)
+//        basketballViewModel.setupRepo(150)
     }
+//    private val assets: AssetManager
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -129,21 +135,6 @@ class GameDetailFragment : Fragment() {
                 .apply {
                     putSerializable(ARGS_UUID, id)
                 }
-//                .apply {
-//                    putString(ARGS_TEAM_ONE_NAME, teamOneName)
-//                }
-//                .apply {
-//                  putString(ARGS_TEAM_TWO_NAME, teamTwoName)
-//                }
-////                .apply {
-////                    putString(ARGS_DATE, date.toString())
-////                }
-//                .apply {
-//                    putInt(ARGS_TEAM_ONE_POINTS, teamOnePoints)
-//                }
-//                .apply {
-//                    putInt(ARGS_TEAM_TWO_POINTS, teamTwoPoints)
-//                }
             return GameDetailFragment().apply {
                 arguments = args
             }
@@ -258,9 +249,6 @@ class GameDetailFragment : Fragment() {
     }
 
     private fun updatePhotoView(){
-        Log.i(TAG, "Hello")
-        Log.i(TAG, "${teamOnePhotoFile.exists()}")
-
         var exif: ExifInterface? = null
         if(teamOnePhotoFile.exists()){
             val bitmap = getScaledBitmap(teamOnePhotoFile.path, requireActivity())
@@ -347,6 +335,7 @@ class GameDetailFragment : Fragment() {
         teamOneTitle.clearFocus()
         teamOneImageButton = view.findViewById(R.id.teamOneImageButton)
         teamOneImageView = view.findViewById(R.id.teamOneImage)
+        teamOneSoundButton = view.findViewById(R.id.teamOneSoundButton)
 
         //Team Two Init
         teamTwo3ShotButton = view.findViewById(R.id.teamTwo3Points)
@@ -357,6 +346,7 @@ class GameDetailFragment : Fragment() {
         teamTwoTitle.clearFocus()
         teamTwoImageButton = view.findViewById(R.id.teamTwoImageButton)
         teamTwoImageView = view.findViewById(R.id.teamTwoImage)
+        teamTwoSoundButton = view.findViewById(R.id.teamTwoSoundButton)
 
 //        Utility Buttons
         resetButton = view.findViewById(R.id.resetButton)
@@ -412,6 +402,14 @@ class GameDetailFragment : Fragment() {
 
         displayButton.setOnClickListener {
             callbacks?.loadWinningList(game.winningTeam)
+        }
+
+        teamOneSoundButton.setOnClickListener {
+            basketballViewModel.playSound(true)
+        }
+
+        teamTwoSoundButton.setOnClickListener {
+            basketballViewModel.playSound(false)
         }
 
 //        Hide Keyboard and Clear Focus on Click-away

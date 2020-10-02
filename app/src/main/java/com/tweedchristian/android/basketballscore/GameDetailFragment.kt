@@ -1,7 +1,16 @@
 package com.tweedchristian.android.basketballscore
 
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.media.ExifInterface
+import android.media.ExifInterface.TAG_ORIENTATION
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -9,18 +18,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.fragment_game_detail.*
+import java.io.File
+import java.io.IOException
 import java.util.*
 
 private const val TAG = "GameDetailFragment"
 
 private const val ARGS_UUID = "uuid"
 private const val ARGS_DATE = "date"
+
+private const val REQUEST_PHOTO_TEAM_ONE = 1
+private const val REQUEST_PHOTO_TEAM_TWO = 2
 
 class GameDetailFragment : Fragment() {
     interface Callbacks {
@@ -40,6 +53,15 @@ class GameDetailFragment : Fragment() {
     private lateinit var resetButton: Button
     private lateinit var saveButton: Button
     private lateinit var displayButton: Button
+
+    private lateinit var teamOneImageView: ImageView
+    private lateinit var teamTwoImageView: ImageView
+    private lateinit var teamOneImageButton: ImageButton
+    private lateinit var teamTwoImageButton: ImageButton
+    private lateinit var teamOnePhotoFile: File
+    private lateinit var teamTwoPhotoFile: File
+    private lateinit var teamOnePhotoUri: Uri
+    private lateinit var teamTwoPhotoUri: Uri
 
     private lateinit var teamOnePointsTextView: TextView
     private lateinit var teamTwoPointsTextView: TextView
@@ -82,7 +104,14 @@ class GameDetailFragment : Fragment() {
             androidx.lifecycle.Observer { game ->
                 game?.let{
                     this.game = game
-
+                    teamOnePhotoFile = basketballViewModel.getTeamOnePhotoFile(game)
+                    teamTwoPhotoFile = basketballViewModel.getTeamTwoPhotoFile(game)
+                    teamOnePhotoUri = FileProvider.getUriForFile(requireActivity(),
+                        "com.tweedchristian.android.basketballscore.fileprovider",
+                    teamOnePhotoFile)
+                    teamTwoPhotoUri = FileProvider.getUriForFile(requireActivity(),
+                        "com.tweedchristian.android.basketballscore.fileprovider",
+                        teamTwoPhotoFile)
                     updateTeams()
                 }
             }
@@ -121,16 +150,29 @@ class GameDetailFragment : Fragment() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == REQUEST_PHOTO_TEAM_ONE){
+            requireActivity().revokeUriPermission(teamOnePhotoUri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            updatePhotoView()
+        }
+        if(requestCode == REQUEST_PHOTO_TEAM_TWO) {
+            requireActivity().revokeUriPermission(
+                teamTwoPhotoUri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            updatePhotoView()
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         val teamOneTitleWatcher = object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 game.teamAName = s.toString()
             }
-
             override fun afterTextChanged(s: Editable?) {
             }
 
@@ -138,17 +180,69 @@ class GameDetailFragment : Fragment() {
         val teamTwoTitleWatcher = object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 game.teamBName = s.toString()
             }
-
             override fun afterTextChanged(s: Editable?) {
             }
 
         }
         teamOneTitle.addTextChangedListener(teamOneTitleWatcher)
         teamTwoTitle.addTextChangedListener(teamTwoTitleWatcher)
+
+        teamOneImageButton.apply {
+            val packageManager: PackageManager = requireActivity().packageManager
+            val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val resolvedActivity: ResolveInfo? =
+                packageManager.resolveActivity(captureImage,
+                    PackageManager.MATCH_DEFAULT_ONLY
+                )
+            if(resolvedActivity == null){
+                isEnabled = false
+            }
+            setOnClickListener{
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, teamOnePhotoUri)
+                val cameraActivities: List<ResolveInfo> =
+                    packageManager.queryIntentActivities(captureImage,
+                        PackageManager.MATCH_DEFAULT_ONLY
+                    )
+                for(cameraActivity in cameraActivities){
+                    requireActivity().grantUriPermission(
+                        cameraActivity.activityInfo.packageName,
+                        teamOnePhotoUri,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                }
+                startActivityForResult(captureImage, REQUEST_PHOTO_TEAM_ONE)
+            }
+        }
+
+        teamTwoImageButton.apply {
+            val packageManager: PackageManager = requireActivity().packageManager
+            val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val resolvedActivity: ResolveInfo? =
+                packageManager.resolveActivity(captureImage,
+                    PackageManager.MATCH_DEFAULT_ONLY
+                )
+            if(resolvedActivity == null){
+                isEnabled = false
+            }
+            setOnClickListener{
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, teamTwoPhotoUri)
+                val cameraActivities: List<ResolveInfo> =
+                    packageManager.queryIntentActivities(captureImage,
+                        PackageManager.MATCH_DEFAULT_ONLY
+                    )
+                for(cameraActivity in cameraActivities){
+                    requireActivity().grantUriPermission(
+                        cameraActivity.activityInfo.packageName,
+                        teamTwoPhotoUri,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                }
+                startActivityForResult(captureImage, REQUEST_PHOTO_TEAM_TWO)
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -159,6 +253,74 @@ class GameDetailFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         callbacks = null
+        requireActivity().revokeUriPermission(teamOnePhotoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        requireActivity().revokeUriPermission(teamTwoPhotoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+    }
+
+    private fun updatePhotoView(){
+        Log.i(TAG, "Hello")
+        Log.i(TAG, "${teamOnePhotoFile.exists()}")
+
+        var exif: ExifInterface? = null
+        if(teamOnePhotoFile.exists()){
+            val bitmap = getScaledBitmap(teamOnePhotoFile.path, requireActivity())
+            try {
+                exif = ExifInterface(teamOnePhotoFile.path)
+                val orientation: Int = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+                if(orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                    try {
+                        val matrix: Matrix = Matrix()
+                        matrix.setRotate(90F)
+                        val correctBitmap: Bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+                        teamOneImageView.setImageBitmap(correctBitmap)
+                        bitmap.recycle()
+                    }
+                    catch(e: OutOfMemoryError) {
+                        e.printStackTrace()
+                    }
+                }
+                else {
+                    teamOneImageView.setImageBitmap(bitmap)
+                }
+            }
+            catch (e: IOException){
+                Log.e(TAG, "IO EXCEPTION")
+                e.printStackTrace()
+            }
+        }
+        else {
+            teamOneImageButton.setImageDrawable(null)
+        }
+
+        if(teamTwoPhotoFile.exists()){
+            val bitmap = getScaledBitmap(teamTwoPhotoFile.path, requireActivity())
+            try {
+                exif = ExifInterface(teamTwoPhotoFile.path)
+                val orientation: Int = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+                if(orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                    try {
+                        val matrix: Matrix = Matrix()
+                        matrix.setRotate(90F)
+                        val correctBitmap: Bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+                        teamTwoImageView.setImageBitmap(correctBitmap)
+                        bitmap.recycle()
+                    }
+                    catch(e: OutOfMemoryError) {
+                        e.printStackTrace()
+                    }
+                }
+                else {
+                    teamTwoImageView.setImageBitmap(bitmap)
+                }
+            }
+            catch (e: IOException){
+                Log.e(TAG, "IO EXCEPTION")
+                e.printStackTrace()
+            }
+        }
+        else {
+            teamTwoImageView.setImageDrawable(null)
+        }
     }
 
     /**
@@ -169,6 +331,7 @@ class GameDetailFragment : Fragment() {
         teamTwoPointsTextView.text = game.teamBScore.toString()
         teamOneTitle.setText(game.teamAName)
         teamTwoTitle.setText(game.teamBName)
+        updatePhotoView()
     }
 
     /**
@@ -182,6 +345,8 @@ class GameDetailFragment : Fragment() {
         teamOnePointsTextView = view.findViewById(R.id.teamOnePoints)
         teamOneTitle = view.findViewById(R.id.teamOneName)
         teamOneTitle.clearFocus()
+        teamOneImageButton = view.findViewById(R.id.teamOneImageButton)
+        teamOneImageView = view.findViewById(R.id.teamOneImage)
 
         //Team Two Init
         teamTwo3ShotButton = view.findViewById(R.id.teamTwo3Points)
@@ -190,6 +355,8 @@ class GameDetailFragment : Fragment() {
         teamTwoPointsTextView = view.findViewById(R.id.teamTwoPoints)
         teamTwoTitle = view.findViewById(R.id.teamTwoName)
         teamTwoTitle.clearFocus()
+        teamTwoImageButton = view.findViewById(R.id.teamTwoImageButton)
+        teamTwoImageView = view.findViewById(R.id.teamTwoImage)
 
 //        Utility Buttons
         resetButton = view.findViewById(R.id.resetButton)

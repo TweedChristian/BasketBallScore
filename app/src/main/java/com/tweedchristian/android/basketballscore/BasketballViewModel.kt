@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import java.io.File
 import java.lang.Math.abs
 import java.util.*
 
@@ -38,5 +39,13 @@ class BasketballViewModel: ViewModel() {
             val game: Game = Game(uuid, randomString1, randomString2, randomScore, randomScore2, Date())
             gameRepository.addGame(game)
         }
+    }
+
+    fun getTeamOnePhotoFile(game: Game): File {
+        return gameRepository.getTeamOnePhotoFile(game)
+    }
+
+    fun getTeamTwoPhotoFile(game: Game): File {
+        return gameRepository.getTeamTwoPhotoFile(game)
     }
 }

@@ -22,6 +22,7 @@ class GameRepository private constructor(context: Context) {
 
     private val gameDao = database.gameDao()
     private val executor = Executors.newSingleThreadExecutor()
+    private val filesDir = context.applicationContext.filesDir
 
     fun getGames(): LiveData<List<Game>> = gameDao.getGames()
     fun getGame(id: UUID): LiveData<Game?> = gameDao.getGame(id)
@@ -37,6 +38,10 @@ class GameRepository private constructor(context: Context) {
             gameDao.updateGame(game)
         }
     }
+
+    fun getTeamOnePhotoFile(game: Game): File = File(filesDir, game.teamOnePhotoName)
+
+    fun getTeamTwoPhotoFile(game: Game): File = File(filesDir, game.teamTwoPhotoName)
 
     companion object {
         private var INSTANCE: GameRepository? = null

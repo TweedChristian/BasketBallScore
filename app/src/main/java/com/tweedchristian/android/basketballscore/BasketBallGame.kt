@@ -50,6 +50,12 @@ data class Game(
             else -> TIE
         }
 
+    val teamOnePhotoName
+        get() = "IMG1_$id.jpg"
+
+    val teamTwoPhotoName
+        get() = "IMG2_$id.jpg"
+
     val getId: UUID
         get() = id
 
